@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getProducts, getLeadershipMessages, getCompanyInfo } from '../services/api';
-import Footer from '../components/layout/Footer';
+import { getProducts, getLeadershipMessages, getCompanyInfo } from '../../services/api';
+import Footer from '../layout/Footer';
 import { ChevronRight, Award, HeartPulse } from 'lucide-react';
 
 
 export default function HomePage() {
     const [products, setProducts] = useState([]);
-    const [Leadership, setLeadership] = useState([]);
+    const [leadership, setLeadership] = useState([]);
     const [companyInfo, setCompanyInfo] = useState([]);
     const [loading, setLoading] = useState(true);
 

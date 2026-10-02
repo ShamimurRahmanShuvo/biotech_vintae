@@ -5,8 +5,8 @@ import {Shield} from 'lucide-react';
 
 export default function Navbar() {
   return (
-    <header classname="bg-white shadow-sm sticky top-0 z-50">
-        <div classname="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3">
                 <div className="bg-brand-blue p-2 rounded-lg text-white">
                     <Shield className="w-8 h-8" />
