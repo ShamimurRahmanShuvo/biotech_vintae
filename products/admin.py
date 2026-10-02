@@ -15,8 +15,8 @@ class IndicationInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'presentation', 'is_featured', 'created_at')
-    list_filter = ('category', 'is_featured', 'created_at')
-    search_fields = ('name','short_description')
+    list_filter = ('category', 'is_featured')
+    search_fields = ('name', 'short_description')
     prepopulated_fields = {'slug': ('name',)}
     inlines = [IngredientInline, IndicationInline]
 
@@ -24,12 +24,11 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('name', 'amount', 'product')
-    list_filter = ('name', 'product')
-    search_fields = ('name','product__name')
+    search_fields = ('name', 'product__name')
 
 
 @admin.register(Indication)
 class IndicationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'product')
-    list_filter = ('name', 'product')
-    search_fields = ('name','product__name')
+    list_display = ('condition_name', 'product')
+    list_filter = ('product',)
+    search_fields = ('condition_name', 'product__name')
