@@ -4,44 +4,41 @@ import { MapPin, Phone } from 'lucide-react';
 export default function Footer({ companyInfo }) {
     const info = companyInfo?.[0] || {};
 
-  return (
-    <footer id="contact" className="bg-brand-dark text-white pt-12 pb-8 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-gray-700">
-            <div>
-                <h3 className="text-xl font-bold mb-3">{info.company_name || 'Biotech Vintae Pharma Ltd.'}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                    Committed to ensuring consistent quality, affordable medicines, and customer satisfaction while
-                    advancing public health welfare.
+    return (
+        <footer id="contact" className="bg-brand-dark text-white pt-12 pb-4">
+            <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 className="text-xl font-bold mb-3">{info.company_name || 'Biotech Vintae Pharma Ltd.'}</h3>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                        Dedicated to human welfare, scientific innovation, and high-quality
+                        affordable healthcare solutions
+                    </p>
+                </div>
+                <div>
+                    <h4 className="text-lg font-semibold mb-3">Office Address</h4>
+                    <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-line">
+                        {info.office_address || "Jannatul Mawa G/125 Ground Floor,\nBeside Khaddo Bhaban, Shahid Abdul Jobbar Sarak,\nRahman Nagar, Bogura"}
+                    </p>
+                </div>
+                <div>
+                    <h4 className="text-lg font-semibold mb-3">Contact Info</h4>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                        Chairman: 01716-185705<br />
+                        Managing Director: 01711-076557<br />
+                        Finance Director: 01765-653583
+                    </p>
+                </div>
+            </div>
+            <div className="text-center border-t border-slate-700 pt-4 text-xs text-gray-400>
+                <p>
+                    &copy; {new Date().getFullYear()} Biotech Vintae Pharma Ltd. All rights reserved.
+                </p>
+                <p>Designed and developed by
+                    <a href="https://shamimurrahmanshuvo.github.io/" className="text-blue-400 hover:underline" target="_blank">
+                        Md Shamimur Rahman Shuvo
+                    </a>
                 </p>
             </div>
-            <div>
-                <h4 className="text-lg font-semibold mb-3">Headquarters</h4>
-                <p className="text-gray-300 text-sm flex items-start gap-2">
-                    <MapPin className="w-5 h-5 text-brand-teal shrink-0 mt-0.5" />
-                        {info.office_address || 'Rahman Nagar, Bogura, Bangladesh'}
-                </p>
-            </div>
-            <div>
-                <h4 className="text-lg font-semibold mb-3">Direct Contacts</h4>
-                <ul className="text-gray-300 text-sm space-y-2">
-                    <li className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-brand-teal" />
-                        <span>Chairman: 01716-185705</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-brand-teal" />
-                        <span>Managing Director: 01711-076557</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-brand-teal" />
-                        <span>Finance Director: 01765-653583</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 text-center text-xs text-gray-400">
-            © {new Date().getFullYear()} Biotech Vintae Pharma Ltd. All rights reserved.
-        </div>
-    </footer>
-  );
+        </footer>
+    );
 }
