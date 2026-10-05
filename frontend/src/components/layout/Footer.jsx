@@ -29,7 +29,7 @@ export default function Footer({ companyInfo }) {
                     </p>
                 </div>
             </div>
-            <div className="text-center border-t border-slate-700 pt-4 text-xs text-gray-400>
+            <div className="text-center border-t border-slate-700 pt-4 text-xs text-gray-400">
                 <p>
                     &copy; {new Date().getFullYear()} Biotech Vintae Pharma Ltd. All rights reserved.
                 </p>

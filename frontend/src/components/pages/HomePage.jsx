@@ -107,43 +107,39 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Product Catalog */}
+            {/* Products Section */}
             <section id="products" className="max-w-[1200px] mx-auto px-6 py-[4rem] w-full">
                 <div className="text-center mb-10">
                     <h2 className="text-3xl font-bold text-brand-blue inline-block relative after:content-[''] after:w-[60px] after:h-[3px] after:bg-brand-teal after:block after:mx-auto after:mt-2">
                         Our Featured Products
                     </h2>
-                    <p className="text-gray-600 mt-2">
-                            Formulated with premium imported raw materials for optimal therapeutic outcomes.
-                    </p>
                 </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {products.map((product) => (
-                    <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-transform duration-300 flex flex-col justify-between border border-gray-100">
-                        <div>
-                            <div className="bg-brand-blue text-white p-4 text-center">
-                                <h3 className="text-xl font-bold">{product.name}</h3>
+                        <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-transform duration-300 flex flex-col justify-between border border-gray-100">
+                            <div>
+                                <div className="bg-brand-blue text-white p-4 text-center">
+                                    <h3 className="text-xl font-bold">{product.name}</h3>
+                                </div>
+                                <div className="p-6">
+                                    <p className="text-sm text-gray-700 mb-4">
+                                        <strong>Category:</strong> {product.category}
+                                    </p>
+                                    <p className="text-sm text-gray-600 line-clamp-3 mb-4">
+                                        {product.short_description}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="p-6">
-                                <p className="text-sm text-gray-700 mb-4">
-                                    <strong>Category:</strong> {product.category}
-                                </p>
-                                <p className="text-sm text-gray-600 line-clamp-3 mb-4">
-                                    {product.short_description}
-                                </p>
+                            <div className="p-6 pt-0 border-t border-gray-100 mt-auto">
+                                <Link
+                                    to={`/product/${product.slug}`}
+                                    className="inline-block mt-4 text-sm font-bold text-brand-teal hover:text-brand-blue transition-colors"
+                                >
+                                    View Details & Formula →
+                                </Link>
                             </div>
                         </div>
-                        <div className="p-6 pt-0 border-t border-gray-100 mt-auto">
-                            <Link
-                                to={`/product/${product.slug}`}
-                                className="inline-block mt-4 text-sm font-bold text-brand-teal hover:text-brand-blue transition-colors"
-                            >
-                                View Details & Formula →
-                            </Link>
-                        </div>
-                        ))}
-                    </div>
+                    ))}
                 </div>
             </section>
 
