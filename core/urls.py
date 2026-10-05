@@ -22,20 +22,18 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from django.views.generic import RedirectView
 
-from products.views import ProductViewSet
 from company.views import LeadershipViewSet, CompanyInfoViewSet
 
 
 router = DefaultRouter()
-router.register(r'products', ProductViewSet, basename='product')
 router.register(r'leadership', LeadershipViewSet, basename='leadership')
 router.register(r'company-info', CompanyInfoViewSet, basename='company-info')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/', include('products.urls')),
     path('', RedirectView.as_view(url='admin/', permanent=False)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
