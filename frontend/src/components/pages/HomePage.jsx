@@ -9,12 +9,20 @@ import heroImage from '../../assets/hero.png';
 function SectionHeading({ eyebrow, title, description }) {
     return (
         <div className="mx-auto mb-12 max-w-2xl text-center">
-            {eyebrow && <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-teal">{eyebrow}</p>}
+            {eyebrow && (
+                <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-teal">
+                    {eyebrow}
+                </p>
+            )}
             <h2 className="text-3xl font-extrabold tracking-tight text-brand-blue sm:text-4xl">
                 {title}
             </h2>
             <div className="mx-auto mt-4 h-1 w-14 rounded-full bg-brand-accent" />
-            {description && <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">{description}</p>}
+            {description && (
+                <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
+                    {description}
+                </p>
+            )}
         </div>
     );
 }
@@ -114,7 +122,7 @@ export default function HomePage() {
                 <section id="leadership" className="scroll-mt-24 bg-brand-light px-5 py-20 sm:px-6 lg:px-8">
                     <SectionHeading eyebrow="Leadership" title="Executive Board Messages" description="Dedicated leadership guiding quality, integrity and human welfare." />
                     <div className="mx-auto grid max-w-7xl gap-7 md:grid-cols-3">
-                        {data.leadership.map((leader) => (
+                        {(data.leadership || []).map((leader) => (
                             <article key={leader.id} className="leadership-card">
                                 <div>
                                     <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue text-white"><ShieldCheck size={24} /></div>
@@ -133,7 +141,7 @@ export default function HomePage() {
                     <SectionHeading eyebrow="Our portfolio" title="Featured Products" description="Explore product information, composition, indications, dosage guidance and storage conditions." />
                     {data.products.length ? (
                         <div className="mx-auto grid max-w-7xl gap-7 sm:grid-cols-2 lg:grid-cols-3">
-                            {data.products.map((product) => (
+                            {(data.products || []).map((product) => (
                                 <article key={product.id} className="product-card">
                                     <div className="flex items-start justify-between gap-4 bg-gradient-to-br from-brand-blue to-[#176b9e] p-6 text-white">
                                         <div>

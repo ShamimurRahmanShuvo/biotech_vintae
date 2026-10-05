@@ -17,10 +17,32 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// DRF may return either a raw array or a paginated response: { results: [] }.
+// Normalize both forms so React components can safely use .map().
+const asArray = (response) => {
+  const payload = response?.data;
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.results)) return payload.results;
+  if (payload && typeof payload === 'object') return [payload];
+  return [];
+};
 
-export const getProducts = () => api.get('products/');
-export const getProductBySlug = (slug) => api.get(`products/${encodeURIComponent(slug)}/`);
-export const getLeadershipMessages = () => api.get('leadership/');
-export const getCompanyInfo = () => api.get('company-info/');
+export const getProducts = async () => {
+  const response = await api.get('products/');
+  return { ...response, data: asArray(response) };
+};
+
+export const getProductBySlug = (slug) =>
+  api.get(`products/${encodeURIComponent(slug)}/`);
+
+export const getLeadershipMessages = async () => {
+  const response = await api.get('leadership/');
+  return { ...response, data: asArray(response) };
+};
+
+export const getCompanyInfo = async () => {
+  const response = await api.get('company-info/');
+  return { ...response, data: asArray(response) };
+};
 
 export default api;
