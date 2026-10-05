@@ -32,6 +32,7 @@ router.register(r'company-info', CompanyInfoViewSet, basename='company-info')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('products.urls')),
+    path('api/', include(router.urls)),
     path('', RedirectView.as_view(url='admin/', permanent=False)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
