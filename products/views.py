@@ -1,14 +1,34 @@
-from rest_framework import viewsets
-from .models import Product
-from .serializers import ProductListSerializer, ProductDetailSerializer
+from rest_framework import viewsets, filters, permissions
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Product, ProductImage
+from .serializers import ProductSerializer, ProductImageSerializer
 
 
-class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Product.objects.all().order_by('-id')
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all().prefetch_related(
+        'indications_rel',
+        'composition_rel',
+        'images'
+    )
+    serializer_class = ProductSerializer
     lookup_field = 'slug'
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return ProductDetailSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'route_of_administration']
+    search_fields = ['name', 'short_description', 'therapeutic_class']
+    ordering_fields = ['name', 'created_at']
 
-        return ProductListSerializer
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [permissions.AllowAny]
+        else:
+            permission_classes = [permissions.IsAdminUser]
+        return [permissions() for permissions in permission_classes]
+
+
+class ProductImageViewSet(viewsets.ModelViewSet):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    permission_classes = [permissions.IsAdminUser]
