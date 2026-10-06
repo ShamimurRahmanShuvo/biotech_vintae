@@ -10,39 +10,42 @@ export const getMediaUrl = (path) => {
 };
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 10000,
+    baseURL: API_BASE_URL,
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+    },
+    timeout: 10000,
 });
+
+const unwrap = (payload) => payload?.data ?? payload;
 
 // DRF may return either a raw array or a paginated response: { results: [] }.
 // Normalize both forms so React components can safely use .map().
-const asArray = (response) => {
-  const payload = response?.data;
-  if (Array.isArray(payload)) return payload;
-  if (Array.isArray(payload?.results)) return payload.results;
-  if (payload && typeof payload === 'object') return [payload];
-  return [];
+const asArray = (payload) => {
+    const value = unwrap(payload);
+    if (Array.isArray(value)) return value;
+    if (Array.isArray(value?.results)) return value.results;
+    return [];
 };
 
 export const getProducts = async () => {
-  const response = await api.get('products/');
-  return { ...response, data: asArray(response) };
+    const response = await api.get('products/');
+    return asArray(response.data);
 };
 
 export const getProductBySlug = (slug) =>
-  api.get(`products/${encodeURIComponent(slug)}/`);
+    api.get(`products/${encodeURIComponent(slug)}/`);
 
 export const getLeadershipMessages = async () => {
-  const response = await api.get('leadership/');
-  return { ...response, data: asArray(response) };
+    const response = await api.get('leadership/');
+    return asArray(response.data);
 };
 
 export const getCompanyInfo = async () => {
-  const response = await api.get('company-info/');
-  return { ...response, data: asArray(response) };
+    const response = await api.get('company-info/');
+    const records = asArray(response.data);
+    return records[0] || null;
 };
 
 export default api;

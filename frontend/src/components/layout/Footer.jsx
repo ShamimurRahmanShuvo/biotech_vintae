@@ -40,7 +40,7 @@ export default function Footer({ companyInfo }) {
                 <p>
                     &copy; {new Date().getFullYear()} Biotech Vintae Pharma Ltd. All rights reserved.
                 </p>
-                <p className="mt-1">Designed and developed by
+                <p className="mt-1">Designed and developed by &nbsp;
                     <a href="https://shamimurrahmanshuvo.github.io/" className="text-brand-teal hover:underline" target="_blank" rel="noreferrer">
                           Md Shamimur Rahman Shuvo
                     </a>

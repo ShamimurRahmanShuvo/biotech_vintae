@@ -31,26 +31,43 @@ export default function HomePage() {
     const [data, setData] = useState({
         products: [],
         leadershipMessages: [],
-        companyInfo: [],
+        companyInfo: null
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         let active = true;
-        Promise.allSettled([getProducts(), getLeadershipMessages(), getCompanyInfo()])
-            .then(([products, leadership, companyInfo]) => {
-                if (!active) return;
-                const failed = [products, leadership, companyInfo].some((items) => item.status === 'rejected');
-                setError(failed ? 'Some company information could not be loaded. Please try again.' : '');
-                setData({
-                    products: products.status === 'fulfilled' ? products.value.data : [],
-                    leadershipMessages: leadership.status === 'fulfilled' ? leadership.value.data : [],
-                    companyInfo: companyInfo.status === 'fulfilled' ? companyInfo.value.data : [],
-                });
-            })
-            .catch(() => active && setError('An unexpected error occurred. Please try again.'))
-            .finally(() => active && setLoading(false));
+
+        const loadHomePage = async () => {
+            const [products, leadership, companyInfo] = await Promise.allSettled([
+                getProducts(),
+                getLeadershipMessages(),
+                getCompanyInfo()
+            ]);
+            if (!active) return;
+
+            const failed = [products, leadership, companyInfo].some(
+                (item) => item.status === 'rejected'
+            );
+            setError(failed ? 'Some company information could not be loaded. Please try again.' : '');
+            setData({
+                products: products.status === 'fulfilled' && (
+                    Array.isArray(products.value) ? products.value : []
+                ),
+                leadership: leadership.status === 'fulfilled' && (
+                    Array.isArray(leadership.value) ? leadership.value : []
+                ),
+                companyInfo: companyInfo.status === 'fulfilled' && (
+                    companyInfo.value ? companyInfo.value : null
+                )
+            });
+        };
+
+        loadHomePage().finally(() => {
+            if (active) setLoading(false);
+        });
+
         return () => { active = false; };
     }, []);
 
@@ -62,15 +79,16 @@ export default function HomePage() {
         );
     }
 
-    const info = data.companyInfo[0] || {};
+    const info = data.companyInfo && typeof data.companyInfo === 'object' ? data.companyInfo : {};
+    const leadership = Array.isArray(data.leadership) ? data.leadership : [];
+    const products = Array.isArray(data.products) ? data.products : [];
 
     return (
         <div className="min-h-screen bg-brand-light text-slate-800">
             <main>
                 {/* Hero Section */}
                 <section className="hero-section">
-                    <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(15,76,129,.96),rgba(0,168,150,.78))]">
-                    </div>
+                    <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(15,76,129,.96),rgba(0,168,150,.78))]" />
                     <div className="relative mx-auto grid min-h-[560px] max-w-7xl items-center gap-10 px-5 py-20 sm:px-6 lg:grid-cols-[1.15fr_.85fr] lg:px-8">
                         <div className="max-w-2xl text-white">
                             <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] backdrop-blur">
@@ -99,71 +117,122 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                {error && <div className="mx-auto max-w-7xl px-5 pt-6 sm:px-6 lg:px-8"><div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">{error}</div></div>}
+                {error && (
+                    <div className="mx-auto max-w-7xl px-5 pt-6 sm:px-6 lg:px-8">
+                        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                            {error}
+                        </div>
+                    </div>
+                )}
 
                 {/* About Section */}
                 <section id="about" className="scroll-mt-24 bg-white px-5 py-20 sm:px-6 lg:px-8">
-                    <sectionHeading eyebrow="Who we are" title="Our Mission & Vision" description="Building a trusted healthcare organization around quality, service, innovation and human welfare." />
+                    <SectionHeading
+                        eyebrow="Who we are"
+                        title="Our Mission & Vision"
+                        description="Building a trusted healthcare organization around quality, service, innovation and human welfare."
+                    />
                     <div className="mx-auto grid max-w-7xl gap-7 md:grid-cols-2">
                         <article className="info-card border-brand-teal">
-                            <div className="icon-badge"><HeartPulse size={22} /></div>
+                            <div className="icon-badge">
+                                <HeartPulse size={22} />
+                            </div>
                             <h3>Our Mission</h3>
-                            <p>{info.mission || 'To create job opportunities, ensure consistent quality, deliver committed service, maintain customer satisfaction, and foster employee professional development.'}</p>
+                            <p>{info.mission || 'Mission information is not available.'}</p>
                         </article>
                         <article className="info-card border-brand-blue">
-                            <div className="icon-badge blue"><Award size={22} /></div>
+                            <div className="icon-badge blue">
+                                <Award size={22} />
+                            </div>
                             <h3>Our Vision</h3>
-                            <p>{info.vision || 'To lead the industry through best-in-class production and marketing practices, exceed customer expectations, and become a beloved organization for patients and employees.'}</p>
+                            <p>{info.vision || 'Vision information is not available.'}</p>
                         </article>
                     </div>
                 </section>
 
                 {/* Leadership Section */}
                 <section id="leadership" className="scroll-mt-24 bg-brand-light px-5 py-20 sm:px-6 lg:px-8">
-                    <SectionHeading eyebrow="Leadership" title="Executive Board Messages" description="Dedicated leadership guiding quality, integrity and human welfare." />
+                    <SectionHeading
+                        eyebrow="Leadership" title="Executive Board Messages"
+                        description="Dedicated leadership guiding quality, integrity and human welfare."
+                    />
                     <div className="mx-auto grid max-w-7xl gap-7 md:grid-cols-3">
-                        {(data.leadership || []).map((leader) => (
+                        {leadership.length ? leadership.map((leader) => (
                             <article key={leader.id} className="leadership-card">
                                 <div>
-                                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue text-white"><ShieldCheck size={24} /></div>
-                                    <p className="text-xs font-bold uppercase tracking-wider text-brand-teal">{leader.role_display || leader.role}</p>
-                                    <h3 className="mt-1 text-xl font-extrabold text-brand-blue">{leader.name}</h3>
-                                    <p className="mt-5 text-sm leading-7 text-slate-600">“{leader.message}”</p>
+                                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue text-white">
+                                        <ShieldCheck size={24} />
+                                    </div>
+                                    <p className="text-xs font-bold uppercase tracking-wider text-brand-teal">
+                                        {leader.role_display || leader.role}
+                                    </p>
+                                    <h3 className="mt-1 text-xl font-extrabold text-brand-blue">
+                                        {leader.name}
+                                    </h3>
+                                    <p className="mt-5 text-sm leading-7 text-slate-600">
+                                        “{leader.message}”
+                                    </p>
                                 </div>
-                                <p className="mt-6 border-t border-slate-100 pt-4 text-xs font-semibold text-slate-500">Cell: {leader.phone_number}</p>
+                                <p className="mt-6 border-t border-slate-100 pt-4 text-xs font-semibold text-slate-500">
+                                    Cell: {leader.phone_number}
+                                </p>
                             </article>
-                        ))}
+                        )) :
+                        <div className="md:col-span-3 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+                            Leadership information is not available at the moment. Please check back later.
+                        </div>
+                        }
                     </div>
                 </section>
 
                 {/* Products Section */}
                 <section id="products" className="scroll-mt-24 bg-white px-5 py-20 sm:px-6 lg:px-8">
-                    <SectionHeading eyebrow="Our portfolio" title="Featured Products" description="Explore product information, composition, indications, dosage guidance and storage conditions." />
-                    {data.products.length ? (
+                    <SectionHeading
+                        eyebrow="Our portfolio" title="Featured Products"
+                        description="Explore product information, composition, indications, dosage guidance and storage conditions."
+                    />
+                    {products.length ? (
                         <div className="mx-auto grid max-w-7xl gap-7 sm:grid-cols-2 lg:grid-cols-3">
-                            {(data.products || []).map((product) => (
+                            {products.map((product) => (
                                 <article key={product.id} className="product-card">
                                     <div className="flex items-start justify-between gap-4 bg-gradient-to-br from-brand-blue to-[#176b9e] p-6 text-white">
                                         <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100">{product.category}</p>
-                                            <h3 className="mt-2 text-xl font-extrabold">{product.name}</h3>
+                                            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100">
+                                                {product.category}
+                                            </p>
+                                            <h3 className="mt-2 text-xl font-extrabold">
+                                                {product.name}
+                                            </h3>
                                         </div>
-                                        <div className="rounded-lg bg-white/10 p-2"><HeartPulse size={20} /></div>
+                                        <div className="rounded-lg bg-white/10 p-2">
+                                            <HeartPulse size={20} />
+                                        </div>
                                     </div>
                                     <div className="flex flex-1 flex-col p-6">
-                                        <p className="text-sm leading-7 text-slate-600">{product.short_description || 'Product information is available on the detail page.'}</p>
+                                        <p className="text-sm leading-7 text-slate-600">
+                                            {product.short_description || 'Product information is available on the detail page.'}
+                                        </p>
                                         <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
                                             <div className="rounded-lg bg-brand-light p-3">
-                                                <span className="block font-bold text-brand-blue">Therapeutic class</span>
-                                                <span className="mt-1 block text-slate-600">{product.therapeutic_class || '—'}</span>
+                                                <span className="block font-bold text-brand-blue">
+                                                    Therapeutic class
+                                                </span>
+                                                <span className="mt-1 block text-slate-600">
+                                                    {product.therapeutic_class || '—'}
+                                                </span>
                                             </div>
                                             <div className="rounded-lg bg-brand-light p-3">
-                                                <span className="block font-bold text-brand-blue">Presentation</span>
-                                                <span className="mt-1 block text-slate-600">{product.presentation || '—'}</span>
+                                                <span className="block font-bold text-brand-blue">
+                                                    Presentation
+                                                </span>
+                                                <span className="mt-1 block text-slate-600">
+                                                    {product.presentation || '—'}
+                                                </span>
                                             </div>
                                         </div>
                                         <Link to={`/product/${product.slug}`} className="mt-6 inline-flex items-center gap-2 font-bold text-brand-teal hover:text-brand-blue">
-                                            View Product Details <ArrowRight size={16} />
+                                            View Product Details
+                                            <ArrowRight size={16} />
                                         </Link>
                                     </div>
                                 </article>
