@@ -1,149 +1,250 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowRight, Award, HeartPulse, ShieldCheck, Sparkles } from 'lucide-react';
 import { getProducts, getLeadershipMessages, getCompanyInfo } from '../../services/api';
 import Footer from '../layout/Footer';
-import { ChevronRight, Award, HeartPulse } from 'lucide-react';
+import heroImage from '../../assets/hero.png';
 
+
+function SectionHeading({ eyebrow, title, description }) {
+    return (
+        <div className="mx-auto mb-12 max-w-2xl text-center">
+            {eyebrow && (
+                <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-teal">
+                    {eyebrow}
+                </p>
+            )}
+            <h2 className="text-3xl font-extrabold tracking-tight text-brand-blue sm:text-4xl">
+                {title}
+            </h2>
+            <div className="mx-auto mt-4 h-1 w-14 rounded-full bg-brand-accent" />
+            {description && (
+                <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
+                    {description}
+                </p>
+            )}
+        </div>
+    );
+}
 
 export default function HomePage() {
-    const [products, setProducts] = useState([]);
-    const [leadership, setLeadership] = useState([]);
-    const [companyInfo, setCompanyInfo] = useState([]);
+    const [data, setData] = useState({
+        products: [],
+        leadershipMessages: [],
+        companyInfo: null
+    });
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
-    Promise.all([getProducts(), getLeadershipMessages(), getCompanyInfo()])
-        .then(([prodRes, leadRes, infoRes]) => {
-            setProducts(prodRes.data);
-            setLeadership(leadRes.data);
-            setCompanyInfo(infoRes.data);
-        })
-        .catch((err) => console.error('Error fetching data:', err))
-        .finally(() => setLoading(false));
+        let active = true;
+
+        const loadHomePage = async () => {
+            const [products, leadership, companyInfo] = await Promise.allSettled([
+                getProducts(),
+                getLeadershipMessages(),
+                getCompanyInfo()
+            ]);
+            if (!active) return;
+
+            const failed = [products, leadership, companyInfo].some(
+                (item) => item.status === 'rejected'
+            );
+            setError(failed ? 'Some company information could not be loaded. Please try again.' : '');
+            setData({
+                products: products.status === 'fulfilled' && (
+                    Array.isArray(products.value) ? products.value : []
+                ),
+                leadership: leadership.status === 'fulfilled' && (
+                    Array.isArray(leadership.value) ? leadership.value : []
+                ),
+                companyInfo: companyInfo.status === 'fulfilled' && (
+                    companyInfo.value ? companyInfo.value : null
+                )
+            });
+        };
+
+        loadHomePage().finally(() => {
+            if (active) setLoading(false);
+        });
+
+        return () => { active = false; };
     }, []);
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-lg font-semibold text-brand-blue animate-pulse">
-                    Loading Biotech Vintae Pharma...
-                </div>
+            <div className="flex min-h-screen items-center justify-center bg-brand-light">
+                <div className="loading-spinner" aria-label="Loading"></div>
             </div>
         );
     }
 
-    const info = companyInfo[0] || {};
+    const info = data.companyInfo && typeof data.companyInfo === 'object' ? data.companyInfo : {};
+    const leadership = Array.isArray(data.leadership) ? data.leadership : [];
+    const products = Array.isArray(data.products) ? data.products : [];
 
     return (
-        <div className="min-h-screen flex flex-col">
-            {/* Hero Section */}
-            <section
-                className="relative text-white py-24 px-6 text-center bg-cover bg-center"
-                style={{
-                    backgroundImage: `linear-gradient(rgba(15, 76, 129, 0.85), rgba(0, 168, 150, 0.85)), url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1350&q=80')`
-                }}
-            >
-                <div className="max-w-[1200px] mx-auto">
-                    <h1 className="text-4xl sm:text-5xl font-bold mb-4">Healing, Trust & Innovation</h1>
-                    <p className="text-lg sm:text-xl max-w-[700px] mx-auto mb-8 text-gray-100">
-                        Delivering international standard medicines and nutraceuticals at affordable prices
-                        while empowering human welfare.
-                    </p>
-                    <a href="#products" className="bg-brand-accent text-white px-7 py-3 rounded-md font-bold inline-block hover:opacity-90 transition shadow-md">
-                        Explore Our Products
-                    </a>
-                </div>
-            </section>
-
-            {/* Leadership Messages */}
-            <section id="leadership" className="max-w-[1200px] mx-auto px-6 py-[4rem] w-full">
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold text-brand-blue inline-block relative after:content-[''] after:w-[60px] after:h-[3px] after:bg-brand-teal after:block after:mx-auto after:mt-2">
-                        Executive Board Messages
-                    </h2>
-                    <p className="text-gray-600 mt-2">
-                        Dedicated leadership guiding quality, integrity, and human welfare.
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {leadership.map((leader) => (
-                    <div key={leader.id} className="bg-white rounded-lg p-8 shadow-[0_4px_6px_rgba(0,0,0,0.05)] border-t-4 border-brand-blue flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-xl font-bold text-brand-blue mb-1">{leader.name}</h3>
-                            <div className="text-sm font-bold text-brand-teal mb-4">{leader.role_display}</div>
-                            <p className="text-gray-700 text-sm leading-relaxed italic">"{leader.message}"</p>
-                        </div>
-                        <div className="text-xs text-gray-500 mt-6 pt-4 border-t border-gray-100">
-                            Cell: {leader.phone_number}
-                        </div>
-                    </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Mission & Vission Section */}
-            <section id="about" className="bg-[#eef7f6] py-[4rem] px-6 w-full">
-                <div className="max-w-[1200px] mx-auto">
-                    <div className="text-center mb-10">
-                        <h2 className="text-3xl font-bold text-brand-blue inline-block relative after:content-[''] after:w-[60px] after:h-[3px] after:bg-brand-teal after:block after:mx-auto after:mt-2">
-                            Our Mission & Vision
-                        </h2>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="bg-white rounded-lg p-8 shadow-[0_4px_6px_rgba(0,0,0,0.05)] border-t-4 border-brand-teal">
-                            <h3 className="text-xl font-bold text-brand-blue mb-3">Our Mission</h3>
-                            <p className="text-gray-700 text-sm leading-relaxed">
-                                {info.mission || "To create job opportunities, ensure consistent quality, deliver committed service, and maintain customer satisfaction across all groups, while fostering employee professional development and work-life balance."}
+        <div className="min-h-screen bg-brand-light text-slate-800">
+            <main>
+                {/* Hero Section */}
+                <section className="hero-section">
+                    <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(15,76,129,.96),rgba(0,168,150,.78))]" />
+                    <div className="relative mx-auto grid min-h-[560px] max-w-7xl items-center gap-10 px-5 py-20 sm:px-6 lg:grid-cols-[1.15fr_.85fr] lg:px-8">
+                        <div className="max-w-2xl text-white">
+                            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] backdrop-blur">
+                                <Sparkles size={14} /> Healthcare • Innovation • Trust
                             </p>
-                        </div>
-                        <div className="bg-white rounded-lg p-8 shadow-[0_4px_6px_rgba(0,0,0,0.05)] border-t-4 border-brand-teal">
-                            <h3 className="text-xl font-bold text-brand-blue mb-3">Our Vision</h3>
-                            <p className="text-gray-700 text-sm leading-relaxed">
-                                {info.vision || "To lead the industry through best-in-class production and marketing practices, exceed customer expectations, and become a beloved organization for both patients and employees."}
+                            <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+                                Healing, Trust & Innovation
+                            </h1>
+                            <p className="mt-6 max-w-xl text-base leading-8 text-blue-50 sm:text-lg">
+                                Delivering international-standard medicines and nutraceuticals at affordable prices while empowering human welfare.
                             </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Products Section */}
-            <section id="products" className="max-w-[1200px] mx-auto px-6 py-[4rem] w-full">
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold text-brand-blue inline-block relative after:content-[''] after:w-[60px] after:h-[3px] after:bg-brand-teal after:block after:mx-auto after:mt-2">
-                        Our Featured Products
-                    </h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {products.map((product) => (
-                        <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-[0_4px_6px_rgba(0,0,0,0.05)] hover:-translate-y-1 transition-transform duration-300 flex flex-col justify-between border border-gray-100">
-                            <div>
-                                <div className="bg-brand-blue text-white p-4 text-center">
-                                    <h3 className="text-xl font-bold">{product.name}</h3>
-                                </div>
-                                <div className="p-6">
-                                    <p className="text-sm text-gray-700 mb-4">
-                                        <strong>Category:</strong> {product.category}
-                                    </p>
-                                    <p className="text-sm text-gray-600 line-clamp-3 mb-4">
-                                        {product.short_description}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="p-6 pt-0 border-t border-gray-100 mt-auto">
-                                <Link
-                                    to={`/product/${product.slug}`}
-                                    className="inline-block mt-4 text-sm font-bold text-brand-teal hover:text-brand-blue transition-colors"
-                                >
-                                    View Details & Formula →
-                                </Link>
+                            <div className="mt-8 flex flex-wrap gap-4">
+                                <a href="#products" className="inline-flex items-center gap-2 rounded-lg bg-brand-accent px-6 py-3 font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:brightness-95">
+                                    Explore Products <ArrowRight size={18} />
+                                </a>
+                                <a href="#about" className="rounded-lg border border-white/50 bg-white/10 px-6 py-3 font-bold text-white backdrop-blur transition hover:bg-white/20">
+                                    Our Mission
+                                </a>
                             </div>
                         </div>
-                    ))}
-                </div>
-            </section>
+                        <div className="hidden justify-center lg:flex">
+                            <div className="hero-art rounded-[2rem] border border-white/20 bg-white/10 p-5 shadow-2xl backdrop-blur">
+                                <img src={heroImage} alt="Biotech Vintae Pharma" className="h-72 w-72 rounded-3xl object-cover" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-            <Footer companyInfo={companyInfo} />
+                {error && (
+                    <div className="mx-auto max-w-7xl px-5 pt-6 sm:px-6 lg:px-8">
+                        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                            {error}
+                        </div>
+                    </div>
+                )}
+
+                {/* About Section */}
+                <section id="about" className="scroll-mt-24 bg-white px-5 py-20 sm:px-6 lg:px-8">
+                    <SectionHeading
+                        eyebrow="Who we are"
+                        title="Our Mission & Vision"
+                        description="Building a trusted healthcare organization around quality, service, innovation and human welfare."
+                    />
+                    <div className="mx-auto grid max-w-7xl gap-7 md:grid-cols-2">
+                        <article className="info-card border-brand-teal">
+                            <div className="icon-badge">
+                                <HeartPulse size={22} />
+                            </div>
+                            <h3>Our Mission</h3>
+                            <p>{info.mission || 'Mission information is not available.'}</p>
+                        </article>
+                        <article className="info-card border-brand-blue">
+                            <div className="icon-badge blue">
+                                <Award size={22} />
+                            </div>
+                            <h3>Our Vision</h3>
+                            <p>{info.vision || 'Vision information is not available.'}</p>
+                        </article>
+                    </div>
+                </section>
+
+                {/* Leadership Section */}
+                <section id="leadership" className="scroll-mt-24 bg-brand-light px-5 py-20 sm:px-6 lg:px-8">
+                    <SectionHeading
+                        eyebrow="Leadership" title="Executive Board Messages"
+                        description="Dedicated leadership guiding quality, integrity and human welfare."
+                    />
+                    <div className="mx-auto grid max-w-7xl gap-7 md:grid-cols-3">
+                        {leadership.length ? leadership.map((leader) => (
+                            <article key={leader.id} className="leadership-card">
+                                <div>
+                                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue text-white">
+                                        <ShieldCheck size={24} />
+                                    </div>
+                                    <p className="text-xs font-bold uppercase tracking-wider text-brand-teal">
+                                        {leader.role_display || leader.role}
+                                    </p>
+                                    <h3 className="mt-1 text-xl font-extrabold text-brand-blue">
+                                        {leader.name}
+                                    </h3>
+                                    <p className="mt-5 text-sm leading-7 text-slate-600">
+                                        “{leader.message}”
+                                    </p>
+                                </div>
+                                <p className="mt-6 border-t border-slate-100 pt-4 text-xs font-semibold text-slate-500">
+                                    Cell: {leader.phone_number}
+                                </p>
+                            </article>
+                        )) :
+                        <div className="md:col-span-3 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+                            Leadership information is not available at the moment. Please check back later.
+                        </div>
+                        }
+                    </div>
+                </section>
+
+                {/* Products Section */}
+                <section id="products" className="scroll-mt-24 bg-white px-5 py-20 sm:px-6 lg:px-8">
+                    <SectionHeading
+                        eyebrow="Our portfolio" title="Featured Products"
+                        description="Explore product information, composition, indications, dosage guidance and storage conditions."
+                    />
+                    {products.length ? (
+                        <div className="mx-auto grid max-w-7xl gap-7 sm:grid-cols-2 lg:grid-cols-3">
+                            {products.map((product) => (
+                                <article key={product.id} className="product-card">
+                                    <div className="flex items-start justify-between gap-4 bg-gradient-to-br from-brand-blue to-[#176b9e] p-6 text-white">
+                                        <div>
+                                            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100">
+                                                {product.category}
+                                            </p>
+                                            <h3 className="mt-2 text-xl font-extrabold">
+                                                {product.name}
+                                            </h3>
+                                        </div>
+                                        <div className="rounded-lg bg-white/10 p-2">
+                                            <HeartPulse size={20} />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-1 flex-col p-6">
+                                        <p className="text-sm leading-7 text-slate-600">
+                                            {product.short_description || 'Product information is available on the detail page.'}
+                                        </p>
+                                        <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
+                                            <div className="rounded-lg bg-brand-light p-3">
+                                                <span className="block font-bold text-brand-blue">
+                                                    Therapeutic class
+                                                </span>
+                                                <span className="mt-1 block text-slate-600">
+                                                    {product.therapeutic_class || '—'}
+                                                </span>
+                                            </div>
+                                            <div className="rounded-lg bg-brand-light p-3">
+                                                <span className="block font-bold text-brand-blue">
+                                                    Presentation
+                                                </span>
+                                                <span className="mt-1 block text-slate-600">
+                                                    {product.presentation || '—'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <Link to={`/product/${product.slug}`} className="mt-6 inline-flex items-center gap-2 font-bold text-brand-teal hover:text-brand-blue">
+                                            View Product Details
+                                            <ArrowRight size={16} />
+                                        </Link>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    ) : <div className="mx-auto max-w-2xl rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
+                            No products are currently available.
+                        </div>}
+                </section>
+
+            </main>
+            <Footer companyInfo={data.companyInfo} />
         </div>
-    );
+    )
 }
