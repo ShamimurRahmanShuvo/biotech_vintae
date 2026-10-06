@@ -3,10 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 const links = [
-    { name: 'About Us', href: '/#about' },
-    { name: 'Leadership', href: '/#leadership' },
-    { name: 'Products', href: '/#products' },
-    { name: 'Contact', href: '/#contact' },
+    { label: 'About Us', href: '/#about' },
+    { label: 'Leadership', href: '/#leadership' },
+    { label: 'Products', href: '/#products' },
+    { label: 'Contact', href: '/#contact' },
 ];
 
 export default function Navbar() {
@@ -64,15 +64,21 @@ export default function Navbar() {
                 {/* Mobile Menu Button */}
                 <button
                     type="button"
-                    className="inline-flex items-center justify-center rounded-lg p-2 text-brand-dark transition-colors hover:bg-slate-100 hover:text-brand-teal md:hidden"
+                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-brand-dark md:hidden"
                     aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
                     aria-expanded={open}
                     onClick={() => setOpen((value) => !value)}
                 >
                     {open ? (
-                        <X size={26} strokeWidth={2} />
+                        <>
+                            <X size={26} strokeWidth={2} />
+                            <span className="text-sm font-semibold">Close</span>
+                        </>
                     ) : (
-                        <Menu size={26} strokeWidth={2} />
+                        <>
+                            <Menu size={26} strokeWidth={2} />
+                            <span className="text-sm font-semibold">Menu</span>
+                        </>
                     )}
                 </button>
             </div>
@@ -86,7 +92,7 @@ export default function Navbar() {
                                 key={link.href}
                                 to={link.href}
                                 onClick={() => handleNav(link.href)}
-                                className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-dark transition-colors duration-200 hover:bg-brand-light hover:text-brand-teal"
+                                className="block rounded-lg px-4 py-3 text-sm font-semibold text-brand-dark hover:bg-brand-light hover:text-brand-teal"
                             >
                                 {link.label}
                             </Link>
