@@ -187,11 +187,8 @@ export default function ProductDetailPage(companyInfo) {
                         </div>
                     </DetailCard>
                 </div>
-            </main>
 
-            <Footer
-                companyInfo={companyInfo}
-            />
+            </main>
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Award, HeartPulse, ShieldCheck, Sparkles } from 'lucide-react';
-import { getProducts, getLeadershipMessages, getCompanyInfo } from '../../services/api';
+// import { getProducts, getLeadershipMessages, getCompanyInfo } from '../../services/api';
 import Footer from '../layout/Footer';
 import heroImage from '../../assets/hero.png';
 
@@ -27,58 +27,8 @@ function SectionHeading({ eyebrow, title, description }) {
     );
 }
 
-export default function HomePage({ companyInfo }) {
-    const [data, setData] = useState({
-        products: [],
-        leadershipMessages: [],
-        companyInfo
-    });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-
-    useEffect(() => {
-        let active = true;
-
-        const loadHomePage = async () => {
-            const [products, leadership] = await Promise.allSettled([
-                getProducts(),
-                getLeadershipMessages(),
-            ]);
-            if (!active) return;
-
-            const failed = [products, leadership].some(
-                (item) => item.status === 'rejected'
-            );
-            setError(failed ? 'Some company information could not be loaded. Please try again.' : '');
-            setData({
-                products: products.status === 'fulfilled' && (
-                    Array.isArray(products.value) ? products.value : []
-                ),
-                leadership: leadership.status === 'fulfilled' && (
-                    Array.isArray(leadership.value) ? leadership.value : []
-                ),
-                companyInfo: companyInfo || null,
-            });
-        };
-
-        loadHomePage().finally(() => {
-            if (active) setLoading(false);
-        });
-
-        return () => { active = false; };
-    }, [companyInfo]);
-
-    if (loading) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-brand-light">
-                <div className="loading-spinner" aria-label="Loading"></div>
-            </div>
-        );
-    }
-
-    const info = data.companyInfo && typeof data.companyInfo === 'object' ? data.companyInfo : {};
-    const leadership = Array.isArray(data.leadership) ? data.leadership : [];
-    const products = Array.isArray(data.products) ? data.products : [];
+export default function HomePage({ companyInfo, leadership = [], products = [] }) {
+    const info = companyInfo && typeof companyInfo === 'object' ? companyInfo : {};
 
     return (
         <div className="min-h-screen bg-brand-light text-slate-800">
@@ -95,7 +45,8 @@ export default function HomePage({ companyInfo }) {
                                 Healing, Trust & Innovation
                             </h1>
                             <p className="mt-6 max-w-xl text-base leading-8 text-blue-50 sm:text-lg">
-                                Delivering international-standard medicines and nutraceuticals at affordable prices while empowering human welfare.
+                                Delivering international-standard medicines
+                                and nutraceuticals at affordable prices while empowering human welfare.
                             </p>
                             <div className="mt-8 flex flex-wrap gap-4">
                                 <a href="#products" className="inline-flex items-center gap-2 rounded-lg bg-brand-accent px-6 py-3 font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:brightness-95">
@@ -113,14 +64,6 @@ export default function HomePage({ companyInfo }) {
                         </div>
                     </div>
                 </section>
-
-                {error && (
-                    <div className="mx-auto max-w-7xl px-5 pt-6 sm:px-6 lg:px-8">
-                        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                            {error}
-                        </div>
-                    </div>
-                )}
 
                 {/* About Section */}
                 <section id="about" className="scroll-mt-24 bg-white px-5 py-20 sm:px-6 lg:px-8">
@@ -241,11 +184,6 @@ export default function HomePage({ companyInfo }) {
                 </section>
 
             </main>
-            <Footer
-                companyInfo={data.companyInfo}
-                leadership={data.leadership}
-            />
-
         </div>
-    )
+    );
 }
