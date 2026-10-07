@@ -1,8 +1,17 @@
 import React from 'react';
 import { Mail, MapPin, Phone } from 'lucide-react';
 
-export default function Footer({ companyInfo }) {
-    const info = companyInfo?.[0] || {};
+export default function Footer({ companyInfo, leadership = [] }) {
+    const info = Array.isArray(companyInfo) ? (companyInfo[0] || {}) : (companyInfo || {});
+    const chairman = leadership.find(
+        (leader) => leader.role === 'CHAIRMAN'
+    );
+    const managingDirector = leadership.find(
+        (leader) => leader.role === 'MD'
+    );
+    const financeDirector = leadership.find(
+        (leader) => leader.role === 'FINANCE'
+    );
 
     return (
         <footer id="contact" className="bg-brand-dark text-white">
@@ -15,6 +24,7 @@ export default function Footer({ companyInfo }) {
                         affordable healthcare solutions
                     </p>
                 </div>
+
                 <div>
                     <h4 className="text-base font-bold">Office Address</h4>
                     <div className="mt-4 flex gap-3 text-sm leading-6 text-slate-300">
@@ -28,9 +38,25 @@ export default function Footer({ companyInfo }) {
                 <div>
                     <h4 className="text-base font-bold">Contact Information</h4>
                     <div className="mt-4 space-y-3 text-sm text-slate-300">
-                        <p className="flex items-center gap-3"><Phone size={17} className="text-brand-teal" /> Chairman: 01716-185705</p>
-                        <p className="flex items-center gap-3"><Phone size={17} className="text-brand-teal" /> Managing Director: 01711-076557</p>
-                        <p className="flex items-center gap-3"><Phone size={17} className="text-brand-teal" /> Finance Director: 01765-653583</p>
+                        {chairman?.phone_number && (
+                            <p className="flex items-center gap-3">
+                                <Phone size={17} className="text-brand-teal" />
+                                <span>Chairman: {chairman.phone_number}</span>
+                            </p>
+                        )}
+
+                        {managingDirector?.phone_number && (
+                            <p className="flex items-center gap-3">
+                                <Phone size={17} className="text-brand-teal" />
+                                <span>Managing Director: {managingDirector.phone_number}</span>
+                            </p>
+                        )}
+                        {financeDirector?.phone_number && (
+                            <p className="flex items-center gap-3">
+                                <Phone size={17} className="text-brand-teal" />
+                                <span>Finance Director: {financeDirector.phone_number}</span>
+                            </p>
+                        )}
                         {info.email && <p className="flex items-center gap-3"><Mail size={17} className="text-brand-teal" /> {info.email}</p>}
                     </div>
                 </div>

@@ -9,7 +9,8 @@ const links = [
     { label: 'Contact', href: '/#contact' },
 ];
 
-export default function Navbar() {
+export default function Navbar(companyInfo) {
+    const info = Array.isArray(companyInfo) ? (companyInfo[0] || {}) : (companyInfo || {});
     const location = useLocation();
     const [open, setOpen] = useState(false);
 
@@ -17,7 +18,7 @@ export default function Navbar() {
         setOpen(false);
 
         if (href.startsWith('/#')) {
-            const id = href.substring(2);
+            const id = href.slice(2);
 
             if (location.pathname === '/') {
                 requestAnimationFrame(() => {
@@ -37,7 +38,7 @@ export default function Navbar() {
                 {/* Logo / Company Name */}
                 <Link to="/" onClick={() => setOpen(false)} className="flex min-w-0 flex-col">
                     <span className="text-lg font-extrabold leading-tight tracking-tight text-brand-blue sm:text-xl">
-                        Biotech Vintae Pharma Ltd.
+                        {info.company_name || 'Biotech Vintage Pharma Ltd.'}
                     </span>
                     <span className="hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-brand-teal sm:block">
                         Quality • Trust • Healthcare
