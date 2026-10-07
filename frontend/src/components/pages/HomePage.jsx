@@ -244,7 +244,11 @@ export default function HomePage() {
                 </section>
 
             </main>
-            <Footer companyInfo={data.companyInfo} />
+            <Footer
+                companyInfo={data.companyInfo}
+                leadership={data.leadership}
+            />
+
         </div>
     )
 }

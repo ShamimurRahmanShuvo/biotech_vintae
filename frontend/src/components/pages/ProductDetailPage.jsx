@@ -181,7 +181,10 @@ export default function ProductDetailPage() {
                 </div>
             </main>
 
-            <Footer companyInfo={companyInfo} />
+            <Footer
+                companyInfo={companyInfo}
+                leaderShip={data.leadership}
+            />
         </div>
     );
 }
