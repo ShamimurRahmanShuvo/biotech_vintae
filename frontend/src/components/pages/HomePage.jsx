@@ -27,11 +27,11 @@ function SectionHeading({ eyebrow, title, description }) {
     );
 }
 
-export default function HomePage() {
+export default function HomePage({ companyInfo }) {
     const [data, setData] = useState({
         products: [],
         leadershipMessages: [],
-        companyInfo: null
+        companyInfo
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -40,14 +40,13 @@ export default function HomePage() {
         let active = true;
 
         const loadHomePage = async () => {
-            const [products, leadership, companyInfo] = await Promise.allSettled([
+            const [products, leadership] = await Promise.allSettled([
                 getProducts(),
                 getLeadershipMessages(),
-                getCompanyInfo()
             ]);
             if (!active) return;
 
-            const failed = [products, leadership, companyInfo].some(
+            const failed = [products, leadership].some(
                 (item) => item.status === 'rejected'
             );
             setError(failed ? 'Some company information could not be loaded. Please try again.' : '');
@@ -58,9 +57,7 @@ export default function HomePage() {
                 leadership: leadership.status === 'fulfilled' && (
                     Array.isArray(leadership.value) ? leadership.value : []
                 ),
-                companyInfo: companyInfo.status === 'fulfilled' && (
-                    companyInfo.value ? companyInfo.value : null
-                )
+                companyInfo: companyInfo || null,
             });
         };
 
@@ -69,7 +66,7 @@ export default function HomePage() {
         });
 
         return () => { active = false; };
-    }, []);
+    }, [companyInfo]);
 
     if (loading) {
         return (

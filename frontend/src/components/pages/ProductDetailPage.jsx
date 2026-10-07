@@ -19,15 +19,23 @@ function DetailCard({ icon, title, children }) {
 }
 
 
-export default function ProductDetailPage() {
+export default function ProductDetailPage(companyInfo) {
     const { slug } = useParams();
     const [product, setProduct] = useState(null);
-    const [companyInfo, setCompanyInfo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         let active = true;
+        getProductBySlug(slug)
+            .then((productRes) => {
+                if (!active) return;
+                setProduct(productRes.data);
+            })
+            .catch(() => active && setError('Product details could not be found'))
+            .finally(() => active && setLoading(false));
+        return () => {active = false };
+        /*
         Promise.all([getProductBySlug(slug), getCompanyInfo()])
             .then(([productRes, companyRes]) => {
                 if (!active) return;
@@ -36,7 +44,7 @@ export default function ProductDetailPage() {
             })
             .catch(() => active && setError('Product details could not be found.'))
             .finally(() => active && setLoading(false));
-        return () => { active = false; };
+        return () => { active = false; }; */
     }, [slug]);
 
     if (loading) {
@@ -183,7 +191,6 @@ export default function ProductDetailPage() {
 
             <Footer
                 companyInfo={companyInfo}
-                leaderShip={data.leadership}
             />
         </div>
     );
