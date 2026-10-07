@@ -2,6 +2,11 @@ from django.contrib import admin
 from .models import LeadershipMessage, CompanyInfo
 
 
+admin.site.site_header = "Biotech Vintage Pharma Ltd."
+admin.site.site_title = "Biotech Vintage Pharma Admin"
+admin.site.index_title = "Administration Dashboard"
+
+
 @admin.register(LeadershipMessage)
 class LeadershipMessageAdmin(admin.ModelAdmin):
     list_display = ('name', 'role', 'phone_number')
