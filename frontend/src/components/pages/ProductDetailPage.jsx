@@ -82,7 +82,7 @@ export default function ProductDetailPage(companyInfo) {
                 <section className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-100">
                     <div className="grid lg:grid-cols-[.7fr_1.3fr]">
                         <div className="flex min-h-[300px] items-center justify-center bg-gradient-to-br from-brand-blue to-brand-teal p-8">
-                            {primaryImage?.image ? <img src={primaryImage.image}  alt={primaryImage.alt_text || product.name}  className="max-h-80 w-full rounded-2xl object-contain" /> : <Package size={110} strokeWidth={1} className="text-white/80" />}
+                            {primaryImage?.image ? <img src={getMediaUrl(primaryImage.image)}  alt={primaryImage.alt_text || product.name}  className="max-h-80 w-full rounded-2xl object-contain" /> : <Package size={110} strokeWidth={1} className="text-white/80" />}
                         </div>
                         <div className="p-7 sm:p-10">
                             <span className="inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-teal">
