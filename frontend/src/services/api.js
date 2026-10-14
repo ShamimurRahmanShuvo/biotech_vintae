@@ -6,7 +6,10 @@ export const API_ORIGIN = new URL(API_BASE_URL, window.location.origin).origin;
 export const getMediaUrl = (path) => {
     if (!path) return '';
     if (/^https?:\/\//i.test(path)) return path;
-    return `${API_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`;
+    return new URL(
+        path.startsWith("/") ? path : `/${path}`,
+        window.location.origin
+    ).href;
 };
 
 const api = axios.create({

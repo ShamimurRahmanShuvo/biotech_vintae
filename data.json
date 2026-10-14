@@ -1,0 +1,162 @@
+[
+{
+  "model": "company.leadershipmessage",
+  "pk": 1,
+  "fields": {
+    "name": "Md. Salim Ibne Ali",
+    "role": "CHAIRMAN",
+    "phone_number": "01716-185705",
+    "message": "At Biotech Vintae Pharma Ltd., our mission is to provide not just medicine but to resonate with your aspirations, life, and values. In today's dynamic medicine market, we understand the importance of Trust, healing, and innovation."
+  }
+},
+{
+  "model": "company.leadershipmessage",
+  "pk": 2,
+  "fields": {
+    "name": "Md. Golam Eunush",
+    "role": "MD",
+    "phone_number": "01711-076557",
+    "message": "This company was established primarily for human welfare. Our goal is to produce international standard medicines, market them at affordable prices, and help reduce unemployment among the educated youth of our country."
+  }
+},
+{
+  "model": "company.leadershipmessage",
+  "pk": 3,
+  "fields": {
+    "name": "Md. Faruque Sultan",
+    "role": "FINANCE",
+    "phone_number": "01765-653583",
+    "message": "Inclusiveness is key at Biotech Vintae Pharma Ltd. We are committed to creating affordable prices and helping people always. All our raw materials come from foreign sources to ensure world-class quality products."
+  }
+},
+{
+  "model": "company.companyinfo",
+  "pk": 1,
+  "fields": {
+    "company_name": "Biotech Vintage Pharma Ltd.",
+    "office_address": "Jannatul Mawa G/125 Ground Floor, Beside Khaddo Bhaban, Shahid Abdul Jobbar Sarak, Rahman Nagar, Bogura",
+    "mission": "Our Mission is to create job opportunities for people. We pledge to ensure consistent quality, committed service, and customer satisfaction while fostering employee well-being, extensive training, and work-life balance.",
+    "vision": "Our vision is to help unemployed people and lead the industry by implementing best-in-class practices in production and marketing, exceeding customer expectations, and maintaining excellence across all sectors."
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "US Joint Max",
+    "slug": "us-joint-max",
+    "category": "Dietary & Nutritional Supplement",
+    "therapeutic_class": null,
+    "short_description": "Provides support for healthy joints and cartilage. Unique combination of high-grade glucosamine, chondroitin, hyaluronic acid, collagen type 2 with added Vit-C, MSM, ginger root & Vit-D.",
+    "presentation": "3x10 Tablets per monopack",
+    "dosage_administration": "",
+    "route_of_administration": "Oral",
+    "pharmacology_how_it_works": null,
+    "contraindications": "Not recommended if hypersensitive to any of the ingredients. Do not exceed recommended usage.",
+    "side_effects": "Generally well tolerated. Rarely constipation, stomach ache, loss of appetite.",
+    "storage_conditions": "Store in a cool & dry place. Protect from direct sunlight, heat & moisture.",
+    "created_at": "2026-10-02T13:50:23.084Z",
+    "updated_at": "2026-10-05T18:11:29.064Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "US Bion",
+    "slug": "us-bion",
+    "category": "Neurovitamins & Minerals",
+    "therapeutic_class": null,
+    "short_description": "Provides Vitamin B1, B2, B6, B12, Zinc & essential minerals to support overall nerve health and prevent vitamin B deficiencies.",
+    "presentation": "3x10 Tablets per monopack",
+    "dosage_administration": "",
+    "route_of_administration": "Oral",
+    "pharmacology_how_it_works": null,
+    "contraindications": null,
+    "side_effects": "Generally well tolerated. Rarely constipation, stomach ache, loss of appetite.",
+    "storage_conditions": "Store in a cool & dry place. Protect from direct sunlight, heat & moisture. Keep out of reach of children.",
+    "created_at": "2026-10-02T13:50:23.107Z",
+    "updated_at": "2026-10-05T18:11:29.064Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "US Cal-Dx",
+    "slug": "us-cal-dx",
+    "category": "Coral Calcium & Minerals",
+    "therapeutic_class": null,
+    "short_description": "High potency coral calcium & minerals made from natural coral fossils for advanced mineral supplementation and medical treatment.",
+    "presentation": "3x10 Tablets per monopack",
+    "dosage_administration": "",
+    "route_of_administration": "Oral",
+    "pharmacology_how_it_works": null,
+    "contraindications": null,
+    "side_effects": "Generally well tolerated. Rarely constipation, stomach ache, loss of appetite.",
+    "storage_conditions": "Store in a cool & dry place. Protect from direct sunlight, heat & moisture. Keep out of reach of children.",
+    "created_at": "2026-10-02T13:50:23.121Z",
+    "updated_at": "2026-10-05T18:11:29.064Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "name": "US Gold",
+    "slug": "us-gold",
+    "category": "High Potency Multivitamins & Minerals",
+    "therapeutic_class": null,
+    "short_description": "Complete organic compound formula containing essential vitamins A to Z and minerals needed for energy production, immunity, and overall health.",
+    "presentation": "3x10 Tablets per monopack",
+    "dosage_administration": "",
+    "route_of_administration": "Oral",
+    "pharmacology_how_it_works": null,
+    "contraindications": null,
+    "side_effects": "Generally well tolerated. Rarely constipation, stomach ache, loss of appetite.",
+    "storage_conditions": "Store in a cool & dry place. Protect from direct sunlight, heat & moisture. Keep out of reach of children.",
+    "created_at": "2026-10-02T13:50:23.132Z",
+    "updated_at": "2026-10-05T18:11:29.064Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "name": "US Pirulina",
+    "slug": "us-pirulina",
+    "category": "Herbal and Nutraceuticals",
+    "therapeutic_class": null,
+    "short_description": "Pure Arthrospira Platensis (Spirulina) superfood, nutritionally complete with rich protein, B12, essential fatty acids, and antioxidants.",
+    "presentation": "Bottled Capsules",
+    "dosage_administration": "",
+    "route_of_administration": "Oral",
+    "pharmacology_how_it_works": null,
+    "contraindications": null,
+    "side_effects": "Generally well tolerated. Occasional diarrhea or mild GI discomfort may occur.",
+    "storage_conditions": "Store in a cool & dry place. Protect from direct sunlight, heat & moisture. Keep out of reach of children.",
+    "created_at": "2026-10-02T13:50:23.143Z",
+    "updated_at": "2026-10-05T18:11:29.064Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "name": "US Biloba",
+    "slug": "us-biloba",
+    "category": "Herbal and Nutraceuticals",
+    "therapeutic_class": null,
+    "short_description": "Standardized Ginkgo Biloba extract supporting memory, cognitive skills, and cerebral blood circulation.",
+    "presentation": "3x10 Tablets per monopack",
+    "dosage_administration": "",
+    "route_of_administration": "Oral",
+    "pharmacology_how_it_works": null,
+    "contraindications": "Increases bleeding risk with blood thinners like aspirin/warfarin. Discontinue prior to scheduled surgery.",
+    "side_effects": "Generally well tolerated. Rarely constipation, stomach ache, loss of appetite.",
+    "storage_conditions": "Store in a cool & dry place. Protect from direct sunlight, heat & moisture. Keep out of reach of children.",
+    "created_at": "2026-10-02T13:50:23.152Z",
+    "updated_at": "2026-10-05T18:11:29.064Z"
+  }
+}
+]
